@@ -9,6 +9,8 @@ from backend.password import PasswordGenerator
 from backend.random_password import RandomGenerator
 # copy
 import pyperclip
+# open links
+import webbrowser
 
 
 # this is the class called when the program starts
@@ -17,8 +19,8 @@ class Main(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         # basic config
-        #tk.Tk.wm_geometry(self, '1280x720')
-        tk.Tk.wm_resizable(self, False, False)
+        tk.Tk.wm_geometry(self, '450x700')
+        tk.Tk.minsize(self, 450, 700)
         tk.Tk.wm_title(self, 'Python Buddies - Password Generator')
         tk.Tk.config(self, bg = '#333333') # hex color #333333 is dark gray
         # create variable
@@ -47,8 +49,25 @@ class MainMenu(tk.Frame):
 
         # using custom buttons for the ui
         Button(root = self, text='Start', command = lambda x: master.switch_frame(SelectMode)).pack(pady = 15)
-        Button(root = self, text='Help', command = lambda x: print('DO HELP')).pack(pady = 15)
+        Button(root = self, text='Help', command = lambda x: master.switch_frame(Help)).pack(pady = 15)
         Button(root = self, text='Exit', command = lambda x: master.destroy()).pack(pady = 15)
+
+    
+
+class Help(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
+        tk.Frame.config(self, bg = '#333333')
+
+        tk.Label(self, text = 'Help', font = ('Arial', 25, 'bold'), bg = '#333333', fg = '#ffffff').pack(pady = 30)
+        tk.Label(self, bg = '#333333').pack(pady = 25) # spacing
+
+        github_link = "https://github.com/RascalTwo/PythonBuddiesPasswordGenerator"
+        discord_link = "https://discord.gg/ED8kU5K"
+
+        Button(root = self, text='GitHub', command = lambda x: webbrowser.open(github_link)).pack(pady = 15)
+        Button(root = self, text='Discord', command = lambda x: webbrowser.open(discord_link)).pack(pady = 15)
+        Button(root = self, text='Back', command = lambda x: master.switch_frame(MainMenu)).pack(pady = 15)
 
 
 
@@ -63,6 +82,7 @@ class SelectMode(tk.Frame):
         # using custom buttons for the ui
         Button(root = self, text='Fully Random', command = lambda x: master.switch_frame(FullyRandom)).pack(pady = 15)
         Button(root = self, text='Easy to Remember', command = lambda x: master.switch_frame(EasyToRemember)).pack(pady = 15)
+        Button(root = self, text='Back', command = lambda x: master.switch_frame(MainMenu)).pack(pady = 15)
 
 
 
@@ -89,6 +109,7 @@ class EasyToRemember(tk.Frame):
         self.entry_password.pack(pady = 15)
 
         Button(root = self, text='Copy', command = lambda x: pyperclip.copy(self.entry_password.get())).pack(pady = 15)
+        Button(root = self, text='Back', command = lambda x: master.switch_frame(SelectMode)).pack(pady = 15)
 
     
     def generate_password(self, temp):
@@ -135,10 +156,11 @@ class FullyRandom(tk.Frame):
 
         Button(root = self, text='Confirm', command = self.generate_password).pack(pady = 15)
 
-        self.entry_password = Entry(self, alt_text='')
+        self.entry_password = tk.Entry(self, font = ("Arial", 18, "bold"), bg = "#a8a8a8", fg = "#181818", borderwidth = 2, relief = "solid")
         self.entry_password.pack(pady = 15)
 
         Button(root = self, text='Copy', command = lambda x: pyperclip.copy(self.entry_password.get())).pack(pady = 15)
+        Button(root = self, text='Back', command = lambda x: master.switch_frame(SelectMode)).pack(pady = 15)
 
     
     def generate_password(self, temp):
@@ -170,8 +192,6 @@ class FullyRandom(tk.Frame):
 
         
 
-    
-        
 if __name__ == '__main__':
     window = Main()
     window.mainloop()
